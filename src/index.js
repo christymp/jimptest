@@ -11,13 +11,13 @@ class App extends React.Component {
     this.state = { fileInfo: {} };
   }
   imgVidUpload = event => {
-    if (
-      event.target.files.length > 0 &&
-      this.state.fileInfo.hasOwnProperty("file") &&
-      this.state.fileInfo.file
-    ) {
-      return console.log("You can uplaod only one file at a time");
-    }
+    // if (
+    //   event.target.files.length > 0 &&
+    //   this.state.fileInfo.hasOwnProperty("file") &&
+    //   this.state.fileInfo.file
+    // ) {
+    //   return console.log("You can uplaod only one file at a time");
+    // }
     let attachmentSupports = "PHOTO".split(",");
     let file = event.target.files[0];
     if (!file) {
