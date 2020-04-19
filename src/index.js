@@ -6,11 +6,14 @@ import "./App.css";
 import { imageResize, dataURLtoFile } from "./image-process";
 
 class App extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = { fileInfo: {} };
   }
-  imgVidUpload = event => {
+
+  // Handle image upload.
+  imgUpload = event => {
     // if (
     //   event.target.files.length > 0 &&
     //   this.state.fileInfo.hasOwnProperty("file") &&
@@ -18,30 +21,26 @@ class App extends React.Component {
     // ) {
     //   return console.log("You can uplaod only one file at a time");
     // }
-    let attachmentSupports = "PHOTO".split(",");
+
     let file = event.target.files[0];
     if (!file) {
       return;
     }
+
+    // Only allow jpg, jpeg, png file types.
     let imageReg = /(.*?)\/(jpg|jpeg|png)$/;
-    let feedType = "";
+
     if (imageReg.test(file.type)) {
-      feedType = !attachmentSupports.includes("PHOTO") ? "SELFIE" : "PHOTO";
-      if (
-        !attachmentSupports.includes("PHOTO") &&
-        !attachmentSupports.includes("SELFIE")
-      )
-        return console.log("only support Video");
       if ((file.size / (1024 * 1024)).toFixed(2) > 10) {
         return console.log("File Size should be smaller than 10MB");
       }
+
       imageResize(file, (newFile, height, width, preview) => {
         try {
           this.setFileInfo(
             newFile,
             newFile.type.split("/")[1],
             newFile.type,
-            feedType,
             height,
             width,
             preview
@@ -54,11 +53,12 @@ class App extends React.Component {
       return console.log("Choose valid file type");
     }
   };
+
+  // Update file information.
   setFileInfo = (
     file,
     extension,
     contentType,
-    feedType,
     height,
     width,
     preview
@@ -71,22 +71,25 @@ class App extends React.Component {
         ...this.state.fileInfo,
         file: file,
         extension: extension,
-        feedType: feedType,
         contentType: contentType,
         preview
       };
+
       if (height && width) {
         fileInfo.height = height;
         fileInfo.width = width;
       }
+
       this.setState({ fileInfo: fileInfo });
     }
   };
+
+  // Render app html.
   render() {
     return (
       <div className="App">
         <h1>Hello CodeSandbox</h1>
-        <input type="file" onChange={this.imgVidUpload} />
+        <input type="file" onChange={this.imgUpload} />
         {this.state.fileInfo.hasOwnProperty("preview") ? (
           <img src={this.state.fileInfo.preview} />
         ) : (
